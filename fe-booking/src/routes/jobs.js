@@ -74,7 +74,7 @@ export function jobRoutes({ db, storage, config }) {
     const job = getJob.get(id);
     job.checklist = db.prepare('SELECT * FROM checklist_items WHERE job_id = ? ORDER BY position, id').all(id);
     job.photos = db.prepare(`
-      SELECT p.id, p.category, p.caption, p.mime, p.size, p.taken_at, p.created_at, p.client_id, u.name AS uploaded_by_name
+      SELECT p.id, p.category, p.caption, p.mime, p.size, p.taken_at, p.created_at, p.uploaded_by, u.name AS uploaded_by_name
       FROM photos p LEFT JOIN users u ON u.id = p.uploaded_by WHERE p.job_id = ? ORDER BY p.id`).all(id);
     job.assets = db.prepare('SELECT * FROM assets WHERE job_id = ? ORDER BY id').all(id);
     job.events = db.prepare(`
