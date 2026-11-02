@@ -33,25 +33,44 @@ Office can cancel any open job.
 
 ## Run it locally
 
-Needs **Node.js 22.13 or newer** (uses the built-in SQLite module).
+Needs **Node.js 22.13 or newer** (uses the built-in SQLite module). Check your version with `node -v`.
+
+### Try the demo
+
+Run these in a terminal (Command Prompt, PowerShell or a Mac/Linux terminal):
 
 ```bash
 cd fe-booking
 npm install
-cp .env.example .env        # set ADMIN_EMAIL / ADMIN_PASSWORD
-npm run seed                # creates the admin account
-npm start                   # http://localhost:3000
+npm run seed:demo
+npm start
 ```
 
-To try it with sample data instead, run `npm run seed:demo`. It adds engineers, sites and jobs, and every demo account uses the password `demo1234`:
+Open **http://localhost:3000** and sign in with any of these. They all use the password **`demo1234`**:
 
 | Role | Email |
 |---|---|
-| Admin | admin@example.com (or `ADMIN_EMAIL`) |
+| Admin | admin@example.com |
 | Dispatcher | dispatch@example.com |
-| Engineers | georgi@example.com, maria@example.com |
+| Engineer | georgi@example.com |
+| Engineer | maria@example.com |
+
+Running `npm run seed:demo` again at any time resets these accounts to `demo1234`.
+
+### Set up for real use
+
+1. Copy `.env.example` to `.env` (Windows: `copy .env.example .env`, Mac/Linux: `cp .env.example .env`).
+2. In `.env`, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` (at least 8 characters).
+3. Run `npm run seed`. This creates only your admin account; sign in with the email and password from `.env`. Then add your engineers under **Team**.
 
 Run the tests with `npm test`.
+
+### Can't sign in?
+
+- **"Wrong email or password"**: for the demo accounts, run `npm run seed:demo` again (this resets them to `demo1234`), then try again.
+- **"Too many attempts"**: after 10 failed tries, an account is locked for 15 minutes. Restarting the server clears this.
+- **HTTPS message, or you land back on the sign-in page**: `COOKIE_SECURE=1` only works over `https://`. For local testing, set `COOKIE_SECURE=0` in `.env`.
+- When the server starts, it prints the data folder it uses and how many users it has. `0 active users` means the database is empty, so run one of the seed commands.
 
 ## Deploy
 

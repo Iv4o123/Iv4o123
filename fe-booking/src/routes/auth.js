@@ -17,6 +17,11 @@ export function authRoutes({ db, config }) {
       throw new HttpError(401, 'Wrong email or password');
     }
     limiter.clear(key);
+    // A Secure cookie sent over plain http is silently dropped by the browser,
+    // which looks like "login does nothing". Say so instead.
+    if (config.cookieSecure && !req.secure) {
+      throw new HttpError(400, 'This server requires HTTPS (COOKIE_SECURE=1) but the page was opened over http://. Open it with https://, or set COOKIE_SECURE=0 for local testing.');
+    }
     createSession(db, config, res, user.id);
     res.json({ user: publicUser(user) });
   });

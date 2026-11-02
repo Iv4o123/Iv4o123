@@ -20,7 +20,8 @@ export function createApp(config) {
 
   const app = express();
   app.disable('x-powered-by');
-  app.set('trust proxy', 'loopback');
+  // Trust X-Forwarded-Proto from a reverse proxy on this machine or a private network (e.g. Docker).
+  app.set('trust proxy', config.trustProxy);
 
   app.use((_req, res, next) => {
     res.set({

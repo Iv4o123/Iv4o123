@@ -24,7 +24,14 @@ export async function loginView(el, { signedIn }) {
     busy(form.querySelector('button'), async () => {
       try {
         const fd = new FormData(form);
-        const { user } = await api.post('/auth/login', { email: fd.get('email'), password: fd.get('password') });
+        await api.post('/auth/login', { email: fd.get('email'), password: fd.get('password') });
+        // Confirm the browser kept the session cookie before moving on.
+        let user;
+        try {
+          user = (await api.get('/me')).data.user;
+        } catch {
+          throw new Error('Your password was accepted, but this browser did not keep you signed in. Allow cookies for this site, or open it via https://.');
+        }
         signedIn(user);
       } catch (err) {
         error.textContent = err instanceof api.OfflineError ? 'No connection. Signing in needs signal.' : err.message;
